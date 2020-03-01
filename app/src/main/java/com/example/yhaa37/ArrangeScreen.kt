@@ -45,11 +45,13 @@ class ArrangeScreen(val context: Context) {
             upgradeTalker(currentTalker)
         }
     }
+
     private fun paramListView() {
         activity.para_ListView.setOnItemClickListener { _, _, position, _ ->
             translaePara(position)
         }
     }
+
     private fun ttParaListView() {
         activity.ttPara_listView.setOnItemClickListener { _, _, position, _ ->
             translaeTtPara(position)
@@ -65,14 +67,14 @@ class ArrangeScreen(val context: Context) {
         createAnimLV()
 
         activity.action_ListView.setOnItemClickListener { _, _, position, _ ->
-            var talker=pref.currentTalk()
+            var talker = pref.currentTalk()
             talker.animNum = actionList[position].toInt()
             upgradeTalker(talker)
         }
     }
 
     private fun translaePara(position: Int) {
-        val interval=pref.getInterval()
+        val interval = pref.getInterval()
         var talker = pref.currentTalk()
         val s = activity.plusAndMinusBtn.text
         val intv = if (s == "+") interval else -interval
@@ -83,8 +85,9 @@ class ArrangeScreen(val context: Context) {
                 pref.saveCurrentPage(1)
                 animationInAction.executeTalker()
             }
-            8->enterNewPage()
-                10->talker=pref.getLastTalker().copy()
+            8 -> enterNewPage()
+            9 -> pref.saveFonts(interval)
+            10 -> talker = pref.getLastTalker().copy()
             11 -> copySpecialTalker(1)
             15 -> talker.textSize = talker.textSize + intv
             16 -> talker.dur = talker.dur + intv
@@ -95,11 +98,16 @@ class ArrangeScreen(val context: Context) {
             23 -> talker.borderWidth = 0
             24 -> changeSwingRepeat(talker, intv)
             25 -> changeRadius(talker, intv)
+            26->{
+                pref.saveCurrentPage(1)
+                animationInAction.executeTalker()
+            }
         }
-        if (position >= 10) upgradeTalker(talker)
+        if (position in 9..25) upgradeTalker(talker)
     }
 
-       private fun upgradeTalker(talker: Talker) {
+
+    private fun upgradeTalker(talker: Talker) {
         var bo = true
         if (talker.textSize < 3) {
             talker.textSize = 3f
@@ -116,15 +124,15 @@ class ArrangeScreen(val context: Context) {
         talker.colorText = style.colorText
         if (bo) {
             val talkList = pref.getTalkingList(1)
-            var index=pref.getCurrentPage()
-            talkList[index]=talker.copy()
+            var index = pref.getCurrentPage()
+            talkList[index] = talker.copy()
             pref.saveTalkingList(talkList)
             animationInAction.executeTalker()
         }
     }
 
     fun copySpecialTalker(modelNum: Int) {
-        val talker=pref.currentTalk()
+        val talker = pref.currentTalk()
         val spicalTalkList = arrayListOf(
             Talker(
                 numTalker = 1, styleNum = 411, animNum = 61, textSize = 288f, dur = 3000
@@ -153,7 +161,7 @@ class ArrangeScreen(val context: Context) {
 
     fun initIt() {
         pref.saveCurrentPage(1)
-       // moveTheAnimation()
+        // moveTheAnimation()
     }
 
 
@@ -177,7 +185,7 @@ class ArrangeScreen(val context: Context) {
     }
 
 
-    private fun chkNewData(talker: Talker):Talker {
+    private fun chkNewData(talker: Talker): Talker {
         with(talker) {
             if (textSize > 300f) textSize = 300f
             if (textSize < 8f) textSize = 8f
@@ -203,7 +211,7 @@ class ArrangeScreen(val context: Context) {
     }
 
     private fun updateLastTalker(ind: Int) {
-        var talker=pref.currentTalk()
+        var talker = pref.currentTalk()
         with(pref) {
             if (ind == 0) saveLastTalker(talker)
             else {
@@ -232,7 +240,7 @@ class ArrangeScreen(val context: Context) {
     }
 
     private fun changeBackColor(talker: Talker) {
-         var currentColor = "#stam"
+        var currentColor = "#stam"
 
         try {
             Color.parseColor(currentColor)
@@ -246,7 +254,7 @@ class ArrangeScreen(val context: Context) {
     }
 
     private fun changeTextColor(talker: Talker) {
-       var currentColor = "#stam"
+        var currentColor = "#stam"
 
         try {
             Color.parseColor(currentColor)
@@ -260,7 +268,7 @@ class ArrangeScreen(val context: Context) {
 
     private fun translaeTtPara(position: Int) {
         var currentColor = "#stam"
-        var interval=pref.getInterval()
+        var interval = pref.getInterval()
 
 
         when (position) {
@@ -313,21 +321,20 @@ class ArrangeScreen(val context: Context) {
                 interval = 0
             }
         }
-      pref.saveInterval(interval)
+        pref.saveInterval(interval)
     }
 
 
-
-    private fun startListFromTheBeginning(){
+    private fun startListFromTheBeginning() {
         pref.saveCurrentPage(1)
-     //  moveTheAnimation()
+        //  moveTheAnimation()
     }
 
 
-   /* private fun moveTheAnimation() {
-        updateTitleTalkerSituation()
-        animationInAction.executeTalker(pref.currentTalk())
-    }*/
+    /* private fun moveTheAnimation() {
+         updateTitleTalkerSituation()
+         animationInAction.executeTalker(pref.currentTalk())
+     }*/
 
     private fun findStyleObject(index: Int): StyleObject {
         var style1 = StyleObject()
@@ -345,38 +352,38 @@ class ArrangeScreen(val context: Context) {
         return style1
     }
 
-   /* fun currentPage(): Int {
-        val talkList = pref.getTalkingListFromPref(1)
-        var cu = pref.getCurrentPage()
-        if (cu < 1 || cu >= talkList.size) {
-            cu = 1
-            pref.saveCurrentPage(cu)
-        }
-        return cu
-    }*/
-   /* private fun updatePage(ind: Int) {
-        val currentPage = pref.getCurrentPage()
-        val lastPage = pref.getLastPage()
-        if (ind == 0) {
-            //lastTalker = talkList[counterStep].copy()
-            pref.saveLastPage(currentPage)
-        } else {
-            //talkList[counterStep] = lastTalker.copy()
-            if (lastPage > 1) {
-                pref.saveLastPage(lastPage - 1)
-            }
-            if (currentPage > 1) {
-                pref.saveCurrentPage(currentPage - 1)
-            }
-        }
-    }*/
+    /* fun currentPage(): Int {
+         val talkList = pref.getTalkingListFromPref(1)
+         var cu = pref.getCurrentPage()
+         if (cu < 1 || cu >= talkList.size) {
+             cu = 1
+             pref.saveCurrentPage(cu)
+         }
+         return cu
+     }*/
+    /* private fun updatePage(ind: Int) {
+         val currentPage = pref.getCurrentPage()
+         val lastPage = pref.getLastPage()
+         if (ind == 0) {
+             //lastTalker = talkList[counterStep].copy()
+             pref.saveLastPage(currentPage)
+         } else {
+             //talkList[counterStep] = lastTalker.copy()
+             if (lastPage > 1) {
+                 pref.saveLastPage(lastPage - 1)
+             }
+             if (currentPage > 1) {
+                 pref.saveCurrentPage(currentPage - 1)
+             }
+         }
+     }*/
 
     private fun drawListView() {
 
-       createStyleLV()
+        createStyleLV()
         createParaList()
         createTtParaTV()
-       createAnimLV()
+        createAnimLV()
     }
 
     private fun createStyleLV() {
@@ -406,7 +413,7 @@ class ArrangeScreen(val context: Context) {
             "-",
             "Start",
             "Page",
-            "-",
+            "Fonts",
             "Last Talker",
             "CopyTalk1",
             "-",
@@ -422,7 +429,8 @@ class ArrangeScreen(val context: Context) {
             "Bord Line",
             "No Bord",
             "Swing Re.",
-            "Radius"
+            "Radius",
+            "Start"
         )
         paraList.addAll(list)
 
@@ -507,7 +515,7 @@ class ArrangeScreen(val context: Context) {
             "30", "31", "32", "33", "34", "35",
             "40", "41", "42", "43", "44", "45", "46",
             "50", "51", "52", "53", "54", "55", "506",
-            "60", "61", "62", "63", "64", "65","100"
+            "60", "61", "62", "63", "64", "65", "100"
         )
         actionList.addAll(list)
         for (i in 0..15) {
@@ -526,8 +534,9 @@ class ArrangeScreen(val context: Context) {
         animationDrawable?.setExitFadeDuration(4000)
         animationDrawable?.start()
     }
+
     fun setLayoutShowMode() {
-        var showPosition=pref.getShowPosition()
+        var showPosition = pref.getShowPosition()
         with(activity) {
             if (!showPosition) {
                 drawListView()

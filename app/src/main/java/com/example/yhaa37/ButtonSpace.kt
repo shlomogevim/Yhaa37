@@ -14,6 +14,8 @@ import android.widget.EditText
 import android.widget.Toast
 import com.github.florent37.viewanimator.ViewAnimator
 import kotlinx.android.synthetic.main.helper_view_layout.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Main
 import java.util.concurrent.TimeUnit
 
 class ButtonSpace(val context: Context) : View.OnClickListener {
@@ -21,7 +23,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
     private val activity = context as Activity
     private val pref = GetAndStoreData(context)
     private val animationInAction = AnimationInAction(context)
-    private val  arrangeScreen = ArrangeScreen(context)
+    private val arrangeScreen = ArrangeScreen(context)
     val helper = Helper(context)
 
     private var statrTime: Long = 0
@@ -122,12 +124,21 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
     }
 
     private fun readAgainTextFile() {
-        var talkList = pref.getTalkingList(1)
-        val textTalkList = pref.createTalkListFromTheStart()
-        talkList = textReRead(talkList, textTalkList)
-        pref.saveTalkingList(talkList)
-        drawAnim()
+        var list = ArrayList<Talker>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val talkList = async { pref.getTalkingList(1) }
+            val textTalkList = async { pref.createTalkListFromTheStart() }
+            val talkList1 = async { textReRead(talkList.await(), textTalkList.await()) }
+            pref.saveTalkingList(talkList1.await())
+            list = talkList1.await()
+            withContext(Dispatchers.Main) {
+                delay(1000)
+                drawAnim()
+            }
+        }
     }
+
 
     fun textReRead(
         talkList: ArrayList<Talker>,
@@ -226,29 +237,73 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
     }
 
     fun previousIt() {
+        pref.saveLastTalker(pref.currentTalk())
         var cu = getCurrentPage()
         cu--
         pref.saveCurrentPage(cu)
-        drawAnim()
-    }
+        nextAndPriviousAction()
+        /*drawAnim()
+        CoroutineScope(Main).launch {
+            waitTillAnimationEnd()
 
-    fun nextItFab() {
-        //  var cu1 = getAndStoreData.getCurrentPage()
-        updateLastTalker(0)
-        /*var cu = currentPage()
-        cu++
-        getAndStoreData.saveCurrentPage(cu)*/
-        drawAnim()
+        }*/
     }
 
     fun nextIt() {
-        // var cu1 = getAndStoreData.getCurrentPage()
-        // updateLastTalker(0)
         pref.saveLastTalker(pref.currentTalk())
         var cu = getCurrentPage()
         cu++
         pref.saveCurrentPage(cu)
-        drawAnim()
+        nextAndPriviousAction()
+        /*drawAnim()
+        CoroutineScope(Main).launch {
+            waitTillAnimationEnd()
+        }*/
+    }
+
+    private fun nextAndPriviousAction(){
+
+            animationInActionSign(1, 500)
+            activity.fab.isClickable = false
+            activity.fab1.isClickable = false
+            drawAnim()
+            val talker = pref.currentTalk()
+        CoroutineScope(Main).launch {
+            //delay(talker.dur + 200)
+            delay(talker.dur)
+            activity.fab.isClickable = true
+            activity.fab1.isClickable = true
+            animationInActionSign(0, 500)
+        }
+
+    }
+
+   /* private suspend fun waitTillAnimationEnd() {
+        val talker = pref.currentTalk()
+        delay(talker.dur + 200)
+        activity.fab.isClickable = true
+        activity.fab1.isClickable = true
+        animationInActionSign(0, 500)
+         withContext(Main) {
+             animationInActionSign(0, 600)
+         }
+    }*/
+
+    fun animationInActionSign(ind: Int, dur: Long) {
+        if (ind == 0) {
+            ViewAnimator
+                .animate(activity.tvPage)
+                .backgroundColor(Color.RED, Color.GREEN)
+                .duration(dur)
+                .start()
+
+        } else {
+            ViewAnimator
+                .animate(activity.tvPage)
+                .backgroundColor(Color.GREEN, Color.RED)
+                .duration(dur)
+                .start()
+        }
     }
 
     private fun changePlusMinusMode() {
@@ -260,6 +315,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
             }
         }
     }
+
 
     private fun time(st: String) {
         endTime = System.nanoTime()
@@ -273,77 +329,45 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
         letsPlay(view)
 
 
-        //     if (!showPosition) {
-        //onClickOther(view)
-        //         return
-        //     }
-        /*   var def = 0
-          if (view == activity.fab) {
-              def++
-          }
-          if (view == activity.fab1) {
-              def--
-          }
-          buttonActivation(0)
-
-          var counterStep = getCurrentPage() + def
-
-          if (counterStep < 1) counterStep = 1
-          if (counterStep == talkList.size) counterStep = 1
-          getAndStoreData.saveCurrentPage(counterStep)
-
-          chageBackgroundColor(1, 1000)
-
-          letsPlay(view)
-
-          val size = pref.currentTalk().takingArray.size
-
-          Utile.listener1 = { it1, _ ->
-              // Log.d("clima", "Hii num->$it1 and time->$it2 and size=$size")
-              if (size == 1 || it1 == size) {
-                  buttonActivation(1)
-                  chageBackgroundColor(0, 1000)
-              }
-          }*/
     }
 
-    /* private fun onClickOther(view: View) {
-         val talkList = pref.getTalkingList(1)
+/* private fun onClickOther(view: View) {
+     val talkList = pref.getTalkingList(1)
 
-         var def = 0
-         if (view == activity.fab) {
-             def++
+     var def = 0
+     if (view == activity.fab) {
+         def++
+     }
+     if (view == activity.fab1) {
+         def--
+     }
+
+     var counterStep = getCurrentPage() + def
+
+     if (counterStep < 1) counterStep = 1
+     if (counterStep == talkList.size) counterStep = 1
+     pref.saveCurrentPage(counterStep)
+
+     if (showPosition) {
+         time("onClickA113")
+         buttonActivation(0)
+
+     }
+
+     chageBackgroundColor(1, 1000)
+
+     letsPlay(view)
+
+     val size = pref.getLastTalker().takingArray.size
+      Utile.listener1 = { it1, _ ->
+         // Log.d("clima", "Hii num->$it1 and time->$it2 and size=$size")
+         if (size == 1 || it1 == size) {
+             time("onClickB114")
+             buttonActivation(1)
+             chageBackgroundColor(0, 1000)
          }
-         if (view == activity.fab1) {
-             def--
-         }
-
-         var counterStep = getCurrentPage() + def
-
-         if (counterStep < 1) counterStep = 1
-         if (counterStep == talkList.size) counterStep = 1
-         pref.saveCurrentPage(counterStep)
-
-         if (showPosition) {
-             time("onClickA113")
-             buttonActivation(0)
-
-         }
-
-         chageBackgroundColor(1, 1000)
-
-         letsPlay(view)
-
-         val size = pref.getLastTalker().takingArray.size
-          Utile.listener1 = { it1, _ ->
-             // Log.d("clima", "Hii num->$it1 and time->$it2 and size=$size")
-             if (size == 1 || it1 == size) {
-                 time("onClickB114")
-                 buttonActivation(1)
-                 chageBackgroundColor(0, 1000)
-             }
-         }
-     }*/
+     }
+ }*/
 
     fun getCurrentPage(): Int {
         val talkList = pref.getTalkingList(1)

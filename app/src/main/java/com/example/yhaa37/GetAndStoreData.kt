@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.yhaa37.Const.Companion.ASSEETS_FILE
 import com.example.yhaa37.Const.Companion.CURRENT_PAGE
 import com.example.yhaa37.Const.Companion.FILE_NUM
+import com.example.yhaa37.Const.Companion.FONTS
 import com.example.yhaa37.Const.Companion.INTERVAL
 import com.example.yhaa37.Const.Companion.LASTTALKER
 import com.example.yhaa37.Const.Companion.LAST_PAGE
@@ -29,13 +30,14 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
     fun saveLastPage(index: Int) {myPref.edit().putInt(LAST_PAGE, index).apply()}
     fun saveInterval(index: Int) {myPref.edit().putInt(INTERVAL, index).apply()}
     fun saveShowPosition(bo: Boolean) {myPref.edit().putBoolean(SHOWPOSITION, bo).apply()}
-
+    fun saveFonts(index: Int) {myPref.edit().putInt(FONTS, index).apply()}
 
     fun getCurrentPage(): Int = myPref.getInt(CURRENT_PAGE, 1)
     fun getLastPage(): Int = myPref.getInt(LAST_PAGE, 1)
     fun getInterval(): Int = myPref.getInt(INTERVAL, 0)
     fun getCurrentFile(): Int = myPref.getInt(FILE_NUM, 1)
     fun getShowPosition(): Boolean = myPref.getBoolean(SHOWPOSITION, true)
+    fun getFonts(): Int = myPref.getInt(FONTS, 1)
 
 
     fun currentTalk():Talker{
@@ -148,7 +150,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     colorText = "#574339"
                     colorBack = "#fdd835"
                     textSize = 28f
-                    animNum = 100
+                    animNum = 20
                     dur = 3000
                     radius = 25f
                 }
