@@ -106,6 +106,9 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
                 helper.activateHowSpeaking()
                 down_layout.visibility = INVISIBLE
                 upper_layout.visibility = VISIBLE
+
+                showPositionBtn.visibility = INVISIBLE
+
                 textRevBtn.visibility = INVISIBLE
                 reSizeTextBtn.visibility = INVISIBLE
                 newPageBtn.visibility = INVISIBLE

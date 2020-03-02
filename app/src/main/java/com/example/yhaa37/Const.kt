@@ -2,18 +2,17 @@ package com.example.yhaa37
 
 class Const {
     companion object {
-        const val ASSEETS_FILE = "23"
-        const val TALKLIST = "talklist23"
-        const val PREFS_NAME = "myPrefs23"
+        const val ASSEETS_FILE = "26"
+        const val PREFS_NAME = "myPrefs26"
+        const val FILE_NUM = "file_num26"
 
-        const val FILE_NUM = "file_num30"
-      // const val PREFS_NAME = "myPrefs"
+        const val TALKLIST = "talklist"
         const val CURRENT_PAGE = "current_page"
         const val LAST_PAGE = "last_talker"
         const val LASTTALKER = "lasttalker"
-        const val SHOWPOSITION="show_position"
-        const val FONTS="fonts"
-        const val INTERVAL="interval"
+        const val SHOWPOSITION = "show_position"
+        const val FONTS = "fonts"
+        const val INTERVAL = "interval"
 
     }
 }

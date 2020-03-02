@@ -1,4 +1,5 @@
 package com.example.yhaa37
+
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.helper_view_layout.*
@@ -19,27 +20,22 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun enterData(){
-        //       pref.saveCurrentPage(1)
-//        val currentPage=pref.getCurrentPage()
-//        talkList[currentPage].animNum=1000
-//        pref.saveTalkingListInPref(talkList)
+    private fun enterData() {
+        pref = GetAndStoreData(this)
+        var talkList = pref.getTalkingList(0)
+        var showPosition = true
+        pref.saveShowPosition(showPosition)
+        //pref.saveCurrentPage(17)
+
+        if (showPosition) {
+            showPositionBtn.text = "toTest"
+        } else {
+            showPositionBtn.text = "toShow"
+        }
     }
 
     private fun initAll() {
-        pref = GetAndStoreData(this)
 
-        var showPosition = true
-        pref.saveShowPosition(showPosition)
-        pref.saveCurrentPage(1)
-
-        if (showPosition){
-            showPositionBtn.text="toTest"
-        }else{
-            showPositionBtn.text="toShow"
-        }
-
-        var  talkList = pref.getTalkingList(0)
         arrangeScreen = ArrangeScreen(this)
         buttonSpace = ButtonSpace(this)
         animationInAction = AnimationInAction(this)
@@ -47,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         arrangeScreen.setLayoutShowMode()
         arrangeScreen.operateListView()
         buttonSpace.setShowPositionMode()
+
     }
 
 }

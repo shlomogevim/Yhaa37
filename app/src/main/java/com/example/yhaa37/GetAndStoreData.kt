@@ -70,7 +70,8 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         }
         return talker
     }
-    fun getTalkingList(ind: Int): ArrayList<Talker> {
+    fun
+            getTalkingList(ind: Int): ArrayList<Talker> {
         val talkList: ArrayList<Talker>
         val gson = Gson()
         val jsonString = myPref.getString(TALKLIST, null)
@@ -78,8 +79,8 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         if (ind == 0 || jsonString == null) {
             talkList = createTalkListFromTheStart()
             saveTalkingList(talkList)
-            saveCurrentPage(1)
-            saveLastTalker(talkList[1])
+            //saveCurrentPage(1)
+           //saveLastTalker(talkList[1])
 
         } else {
             val type = object : TypeToken<ArrayList<Talker>>() {}.type
@@ -128,6 +129,12 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                             takingArray.add(item)
                         }
                     }
+                    talker.numTalker = countItem
+                    styleNum = 51
+                    colorText = "#574339"
+                    colorBack = "#fdd835"
+                    borderColor = "#000000"
+                    borderWidth = 0
                 }
                 talkList1.add(talker)
                 countItem++
@@ -135,24 +142,19 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                 with(talker) {
                     whoSpeake = "god"
                     talker.taking = st2.trim()
-                    talker.numTalker = countItem
                     var arr = st2.split("\n")
                     for (item in arr) {
                         if (item != "") {
                             takingArray.add(item)
                         }
                     }
-                    backExist = true
-                    borderColor = "#000000"
-                    borderWidth = 0
+                    talker.numTalker = countItem
                     styleNum = 51
-                    swingRepeat = 0
                     colorText = "#574339"
                     colorBack = "#fdd835"
-                    textSize = 28f
-                    animNum = 20
-                    dur = 3000
-                    radius = 25f
+                    borderColor = "#000000"
+                    borderWidth = 0
+
                 }
                 talkList1.add(talker)
             }

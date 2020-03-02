@@ -18,33 +18,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/godSpace2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="65dp"
-        android:elevation="1dp"
-        android:gravity="center_horizontal|top"
-        android:orientation="vertical"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/goddy">
-
-        <TextView
-            android:id="@+id/godSpeaking2A"
-            style="@style/SimpleOne"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:elevation="10dp"
-            android:gravity="center_horizontal"
-            tools:text="godSpeaking2A" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/godSpace1"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -92,7 +65,7 @@
             style="@style/SimpleOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="60dp"
             android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking0" />
@@ -101,7 +74,6 @@
             android:id="@+id/godSpeaking1"
             style="@style/SimpleOne"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:elevation="10dp"
             android:gravity="center_horizontal"
@@ -111,7 +83,6 @@
             android:id="@+id/godSpeaking2"
             style="@style/SimpleOne"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:elevation="10dp"
             android:gravity="center_horizontal"
@@ -121,7 +92,6 @@
             android:id="@+id/godSpeaking3"
             style="@style/SimpleOne"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:elevation="10dp"
             android:gravity="center_horizontal"
@@ -131,7 +101,6 @@
             android:id="@+id/godSpeaking4"
             style="@style/SimpleOne"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:elevation="10dp"
             android:gravity="center_horizontal"
@@ -141,11 +110,36 @@
             android:id="@+id/godSpeaking5"
             style="@style/SimpleOne"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:elevation="10dp"
             android:gravity="center_horizontal"
             tools:text="godSpeaking5" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/godSpace2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="65dp"
+        android:elevation="1dp"
+        android:gravity="center_horizontal|top"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goddy">
+
+        <TextView
+            android:id="@+id/godSpeaking2A"
+            style="@style/SimpleOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:elevation="10dp"
+            android:gravity="center_horizontal"
+            tools:text="godSpeaking2A" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

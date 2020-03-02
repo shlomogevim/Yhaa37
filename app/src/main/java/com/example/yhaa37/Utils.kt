@@ -8,15 +8,19 @@ data class Talker(
     var whoSpeake: String = "man",
     var taking: String = "tadam",
     var takingArray: ArrayList<String> = arrayListOf(),
-    var styleNum: Int = 50,
+    var styleNum: Int = 0,
+    var colorBack: String = "#000000",
+    var colorText: String = "#fdd835",
+
+    var numTalker: Int = 0,
     var animNum: Int = 20,
     var dur: Long = 3000,
-    var textSize: Float = 28f,
-    var colorBack: String = "#574339",
+    var textSize: Float = 20f,
+
     var backExist: Boolean = true,
-    var colorText: String = "#fdd835",
-    var numTalker: Int = 0,
-    var radius: Float = 30f,
+
+
+    var radius: Float = 24f,
     var padding: ArrayList<Int> = arrayListOf(10, 0, 10, 0),
     var borderColor: String = "#000000",
     var borderWidth: Int = 0,
