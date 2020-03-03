@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         var talkList = pref.getTalkingList(0)
         var showPosition = true
         pref.saveShowPosition(showPosition)
-        //pref.saveCurrentPage(17)
+        pref.saveCurrentPage(16)
 
         if (showPosition) {
             showPositionBtn.text = "toTest"
