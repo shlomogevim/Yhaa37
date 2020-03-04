@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.yhaa37.Const.Companion.ASSEETS_FILE
 import com.example.yhaa37.Const.Companion.CURRENT_PAGE
@@ -19,6 +20,7 @@ import com.example.yhaa37.Const.Companion.TALKLIST
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.ByteArrayOutputStream
+import java.util.logging.Handler
 
 class GetAndStoreData(val context: Context) : AppCompatActivity() {
 
@@ -26,11 +28,25 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
     private var talkList = getTalkingList(1)
 
 
-    fun saveCurrentPage(index: Int) {myPref.edit().putInt(CURRENT_PAGE, index).apply()}
-    fun saveLastPage(index: Int) {myPref.edit().putInt(LAST_PAGE, index).apply()}
-    fun saveInterval(index: Int) {myPref.edit().putInt(INTERVAL, index).apply()}
-    fun saveShowPosition(bo: Boolean) {myPref.edit().putBoolean(SHOWPOSITION, bo).apply()}
-    fun saveFonts(index: Int) {myPref.edit().putInt(FONTS, index).apply()}
+    fun saveCurrentPage(index: Int) {
+        myPref.edit().putInt(CURRENT_PAGE, index).apply()
+    }
+
+    fun saveLastPage(index: Int) {
+        myPref.edit().putInt(LAST_PAGE, index).apply()
+    }
+
+    fun saveInterval(index: Int) {
+        myPref.edit().putInt(INTERVAL, index).apply()
+    }
+
+    fun saveShowPosition(bo: Boolean) {
+        myPref.edit().putBoolean(SHOWPOSITION, bo).apply()
+    }
+
+    fun saveFonts(index: Int) {
+        myPref.edit().putInt(FONTS, index).apply()
+    }
 
     fun getCurrentPage(): Int = myPref.getInt(CURRENT_PAGE, 1)
     fun getLastPage(): Int = myPref.getInt(LAST_PAGE, 1)
@@ -39,37 +55,43 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
     fun getShowPosition(): Boolean = myPref.getBoolean(SHOWPOSITION, true)
     fun getFonts(): Int = myPref.getInt(FONTS, 1)
 
-
-    fun currentTalk():Talker{
-        val list=getTalkingList(1)
-        val index=getCurrentPage()
+    fun currentTalk(): Talker {
+        val list = getTalkingList(1)
+        var index = getCurrentPage()
+        if (index > list.size - 1) {
+            index = index--
+            if (index < 1) index = 1
+            Toast.makeText(context, "sorry ther is more then 6 lines", Toast.LENGTH_LONG).show()
+        }
         return list[index]
     }
 
 
     fun saveTalkingList(talkingList: ArrayList<Talker>) {
         val gson = Gson()
-        val tagNum=getCurrentFile()
+        val tagNum = getCurrentFile()
         val jsonString = gson.toJson(talkingList)
-       // myPref.edit().putString(TALKLIST+tagNum.toString(), jsonString).apply()
+        // myPref.edit().putString(TALKLIST+tagNum.toString(), jsonString).apply()
         myPref.edit().putString(TALKLIST, jsonString).apply()
     }
+
     fun saveLastTalker(lastTalker: Talker) {
         val gson = Gson()
         val jsonString = gson.toJson(lastTalker)
         myPref.edit().putString(LASTTALKER, jsonString).apply()
     }
 
-    fun getLastTalker():Talker{
-        var talker=Talker()
-        var jsonS=myPref.getString(LASTTALKER,null)
-        if (jsonS!=null){
-            val gson=Gson()
+    fun getLastTalker(): Talker {
+        var talker = Talker()
+        var jsonS = myPref.getString(LASTTALKER, null)
+        if (jsonS != null) {
+            val gson = Gson()
             val type = object : TypeToken<Talker>() {}.type
             talker = gson.fromJson(jsonS, type)
         }
         return talker
     }
+
     fun
             getTalkingList(ind: Int): ArrayList<Talker> {
         val talkList: ArrayList<Talker>
@@ -79,14 +101,24 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         if (ind == 0 || jsonString == null) {
             talkList = createTalkListFromTheStart()
             saveTalkingList(talkList)
-            //saveCurrentPage(1)
-           //saveLastTalker(talkList[1])
+            saveCurrentPage(1)
+            saveLastTalker(talkList[1])
 
         } else {
             val type = object : TypeToken<ArrayList<Talker>>() {}.type
             talkList = gson.fromJson(jsonString, type)
         }
         return talkList
+    }
+
+
+
+    private fun setToastMessage(st: String) {
+        val st0 = "במשפט  :"
+        val str1 = "$st there is more 6 lines"
+        Toast.makeText(context, st0 + str1, Toast.LENGTH_LONG).show()
+
+
     }
 
     fun createTalkListFromTheStart(): ArrayList<Talker> {
@@ -124,6 +156,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     taking = st1.trim()
                     numTalker = countItem
                     var arr = st1.split("\n")
+                    if (arr.size > 6) setToastMessage(st1)
                     for (item in arr) {
                         if (item != "") {
                             takingArray.add(item)
@@ -143,6 +176,7 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
                     whoSpeake = "god"
                     talker.taking = st2.trim()
                     var arr = st2.split("\n")
+                    if (arr.size > 6) setToastMessage(st1)
                     for (item in arr) {
                         if (item != "") {
                             takingArray.add(item)
@@ -162,96 +196,99 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         return talkList1
     }
 
-  /*  fun getTalkingList(ind: Int): ArrayList<Talker> {
-        val talkList: ArrayList<Talker>
-        val gson = Gson()
-        val jsonString = myPref.getString(TALKLIST, null)
+    /*  fun getTalkingList(ind: Int): ArrayList<Talker> {
+          val talkList: ArrayList<Talker>
+          val gson = Gson()
+          val jsonString = myPref.getString(TALKLIST, null)
 
-        if (ind == 0 || jsonString == null) {
-            talkList = createTalkListFromTheStart()
-            saveTalkingList(talkList)
-            saveCurrentPage(1)
-            saveLastTalker(talkList[1])
+          if (ind == 0 || jsonString == null) {
+              talkList = createTalkListFromTheStart()
+              saveTalkingList(talkList)
+              saveCurrentPage(1)
+              saveLastTalker(talkList[1])
 
-        } else {
-            val type = object : TypeToken<ArrayList<Talker>>() {}.type
-            talkList = gson.fromJson(jsonString, type)
-        }
-        return talkList
-    }*/
+          } else {
+              val type = object : TypeToken<ArrayList<Talker>>() {}.type
+              talkList = gson.fromJson(jsonString, type)
+          }
+          return talkList
+      }*/
 
-   /* fun createTalkListFromTheStart(): ArrayList<Talker> {
-        var talkList1 = arrayListOf<Talker>()
-        val ADAM = "-אדם-"
-        val GOD = "-אלוהים-"
-        val currenteFile = "text/text" + ASSEETS_FILE + ".txt"
+    /* fun createTalkListFromTheStart(): ArrayList<Talker> {
+         var talkList1 = arrayListOf<Talker>()
+         val ADAM = "-אדם-"
+         val GOD = "-אלוהים-"
+         val currenteFile = "text/text" + ASSEETS_FILE + ".txt"
 
-        var countItem = 0
-        var text = context.assets.open(currenteFile).bufferedReader().use {
-            it.readText()
-        }
-        text = text.replace("\r", "")
-        var list1 = text.split(ADAM)
+         var countItem = 0
+         var text = context.assets.open(currenteFile).bufferedReader().use {
+             it.readText()
+         }
+         text = text.replace("\r", "")
+         var list1 = text.split(ADAM)
 
-        var talker = Talker()
+         var talker = Talker()
 
-        talkList1.add(countItem, talker)
-        var i = 0
+         talkList1.add(countItem, talker)
+         var i = 0
 
-        for (element in list1) {
-            //  if (element != "" && element.length > 25) {
-            if (element != "") {
-                i++
-                var list2 = element.split(GOD)
-                var st1 = improveString(list2[0])
-                var st2 = improveString(list2[1])
-                if (st1.isNullOrEmpty() || st2.isNullOrEmpty()) {
-                    return talkList1
-                }
-                countItem++
-                talker = Talker()
-                with(talker) {
-                    whoSpeake = "man"
-                    taking = st1.trim()
-                    numTalker = countItem
-                    var arr = st1.split("\n")
-                    for (item in arr) {
-                        if (item != "") {
-                            takingArray.add(item)
-                        }
-                    }
-                    colorText = "#000000"
-                    colorBack = "#ffffff"
-                    animNum = 10
-                }
+         for (element in list1) {
+             //  if (element != "" && element.length > 25) {
+             if (element != "") {
+                 i++
+                 var list2 = element.split(GOD)
+                 var st1 = improveString(list2[0])
+                 var st2 = improveString(list2[1])
+                 if (st1.isNullOrEmpty() || st2.isNullOrEmpty()) {
+                     return talkList1
+                 }
+                 countItem++
+                 talker = Talker()
+                 with(talker) {
+                     whoSpeake = "man"
+                     taking = st1.trim()
+                     numTalker = countItem
+                     var arr = st1.split("\n")
+                     for (item in arr) {
+                         if (item != "") {
+                             takingArray.add(item)
+                         }
+                     }
+                     colorText = "#000000"
+                     colorBack = "#ffffff"
+                     animNum = 10
+                 }
 
-                talkList1.add(talker)
+                 talkList1.add(talker)
 
-                countItem++
-                talker = Talker()
-                with(talker) {
-                    whoSpeake = "god"
-                    talker.taking = st2.trim()
-                    talker.numTalker = countItem
-                    var arr = st2.split("\n")
-                    for (item in arr) {
-                        if (item != "") {
-                            takingArray.add(item)
-                        }
-                    }
-                    colorText = "#000000"
-                    colorBack = "#ffffff"
-                    animNum = 10
-                }
-                talkList1.add(talker)
-            }
-        }
-        return talkList1
-    }*/
+                 countItem++
+                 talker = Talker()
+                 with(talker) {
+                     whoSpeake = "god"
+                     talker.taking = st2.trim()
+                     talker.numTalker = countItem
+                     var arr = st2.split("\n")
+                     for (item in arr) {
+                         if (item != "") {
+                             takingArray.add(item)
+                         }
+                     }
+                     colorText = "#000000"
+                     colorBack = "#ffffff"
+                     animNum = 10
+                 }
+                 talkList1.add(talker)
+             }
+         }
+         return talkList1
+     }*/
 
     private fun improveString(st: String) = st.substring(1, st.length - 1)
 
-    fun saveCurrentFile(index: Int) {myPref.edit().putInt(FILE_NUM, index).apply()}
+    fun saveCurrentFile(index: Int) {
+        myPref.edit().putInt(FILE_NUM, index).apply()
+    }
+
     private fun createTalkArray(jsonString: String?) {
         var talkList: ArrayList<Talker>
         //  Log.d("clima",jsonString)
@@ -263,10 +300,10 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
 
     fun createNewList(): ArrayList<Talker> {
         var talkList1 = ArrayList<Talker>()
-        val tagNum=getCurrentFile()
+        val tagNum = getCurrentFile()
 
         // var jsonS =  myPref.getString(TALKLIST+tagNum.toString(), null)
-        var jsonS =  myPref.getString(TALKLIST, null)
+        var jsonS = myPref.getString(TALKLIST, null)
         if (jsonS != null) {
             val gson = Gson()
             val type = object : TypeToken<ArrayList<Talker>>() {}.type
@@ -280,11 +317,11 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         myPref.edit().putString(TALKLIST, jsonS).apply()
     }
 
-    fun getJsonArryFromPref( ): ArrayList<Talker> {
-        var list= ArrayList<Talker>()
+    fun getJsonArryFromPref(): ArrayList<Talker> {
+        var list = ArrayList<Talker>()
         var jsonS: String?
         jsonS = myPref.getString(TALKLIST, null)
-        if (!jsonS.isNullOrEmpty()){
+        if (!jsonS.isNullOrEmpty()) {
             val gson = Gson()
             val type = object : TypeToken<ArrayList<Talker>>() {}.type
             list = gson.fromJson(jsonS, type)
@@ -312,19 +349,19 @@ class GetAndStoreData(val context: Context) : AppCompatActivity() {
         return talkList
     }
 
-    private fun decodebase64(input:String):Bitmap{
-        val decodeByte=Base64.decode(input,0)
-        val bit=BitmapFactory.decodeByteArray(decodeByte,0,decodeByte.size)
+    private fun decodebase64(input: String): Bitmap {
+        val decodeByte = Base64.decode(input, 0)
+        val bit = BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.size)
         return bit
     }
 
-    private fun encodeToBase64(image:Bitmap):String{
-        val immage=image
-        val baos=ByteArrayOutputStream()
-        immage.compress(Bitmap.CompressFormat.PNG,100,baos)
-        val b=baos.toByteArray()
-        val imageEncoded=Base64.encodeToString(b,Base64.DEFAULT)
-        Log.d("clima","imageEncode->$imageEncoded")
+    private fun encodeToBase64(image: Bitmap): String {
+        val immage = image
+        val baos = ByteArrayOutputStream()
+        immage.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val b = baos.toByteArray()
+        val imageEncoded = Base64.encodeToString(b, Base64.DEFAULT)
+        Log.d("clima", "imageEncode->$imageEncoded")
         return imageEncoded
     }
 }

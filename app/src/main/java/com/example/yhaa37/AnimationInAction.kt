@@ -44,7 +44,8 @@ class AnimationInAction(val context: Context) {
     private var god4: TextView = activity.godSpeaking4
     private var god5: TextView = activity.godSpeaking5
 
-    var listOfTextview = arrayListOf<TextView?>()
+   // var listOfTextview = arrayListOf<TextView?>()
+    var listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
     var listOfTextviewMul = arrayListOf<TextView?>()
     var listOfTextviewMul2 = arrayListOf<TextView?>()
 
@@ -103,21 +104,20 @@ class AnimationInAction(val context: Context) {
         updateTitleTalkerSituation()
        val talker=pref.currentTalk()
         helper.activateHowSpeaking()
+
         if (talker.whoSpeake == "man") {
             configManTextView(talker)
-           /* listOfTextview.clear()
-            listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
-            listOfTextview.removeAll(Collections.singleton(null))*/
-           // listOfTextview.clear()
-            listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
-          //  listOfTextview.removeAll(Collections.singleton(null))
+
+          // listOfTextview.clear()
+           listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
+            listOfTextview.removeAll(Collections.singleton(null))
         }
 
         if (talker.whoSpeake == "god") {
             configGodTextView(talker)
            // listOfTextview.clear()
-            listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
-          //  listOfTextview.removeAll(Collections.singleton(null))
+           listOfTextview = arrayListOf(tv0, tv1, tv2, tv3, tv4, tv5)
+           listOfTextview.removeAll(Collections.singleton(null))
 
            // listOfTextviewMul.clear()
             listOfTextviewMul = arrayListOf(tv0A)
