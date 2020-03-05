@@ -57,11 +57,13 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
             R.id.reSizeTextBtn -> minTextSize()
             R.id.fab -> nextIt()
             R.id.fab1 -> previousIt()
+            R.id.tvPage -> startPage()
             else -> drawAnim()
 
         }
 
     }
+
 
     private fun changeShowPosition() {
         var showPosition = pref.getShowPosition()
@@ -252,16 +254,18 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
         }*/
     }
 
+    private fun startPage() {
+        pref.saveLastTalker(pref.currentTalk())
+        pref.saveCurrentPage(1)
+        nextAndPriviousAction()
+    }
     fun nextIt() {
         pref.saveLastTalker(pref.currentTalk())
         var cu = getCurrentPage()
         cu++
         pref.saveCurrentPage(cu)
         nextAndPriviousAction()
-        /*drawAnim()
-        CoroutineScope(Main).launch {
-            waitTillAnimationEnd()
-        }*/
+
     }
 
     private fun nextAndPriviousAction(){
@@ -481,6 +485,7 @@ class ButtonSpace(val context: Context) : View.OnClickListener {
             toShowModeBtn.setOnClickListener { onClick(toShowModeBtn) }
             fab.setOnClickListener { onClick(fab) }
             fab1.setOnClickListener { onClick(fab1) }
+            tvPage.setOnClickListener { onClick(tvPage) }
         }
         setShowPositionMode()
     }

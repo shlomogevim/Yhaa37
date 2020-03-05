@@ -246,5 +246,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_media_previous" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

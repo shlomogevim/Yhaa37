@@ -22,10 +22,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun enterData() {
         pref = GetAndStoreData(this)
-        var talkList = pref.getTalkingList(0)
+
+       var talkList = pref.getTalkingList(0) //***********
+        pref.saveCurrentPage(49)
+
         var showPosition = true
         pref.saveShowPosition(showPosition)
-        pref.saveCurrentPage(5)
 
         if (showPosition) {
             showPositionBtn.text = "toTest"
